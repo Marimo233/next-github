@@ -11,15 +11,18 @@ app.prepare().then(()=>{
     // const redis=new Redis()
     router.get("/a/:id",async (ctx,next)=>{
 			const id=ctx.params.id
-        await app.render(ctx.req,ctx.res,{
+        await handle(ctx.req,ctx.res,{
 					pathname:'/a',
 					query:{id}
 				})
-				ctx.respond=false
+				
 		})
 		
     server.use(router.routes())
-    
+    server.use(async (ctx, next) => {
+      await handle(ctx.req, ctx.res)
+      // ctx.respond = false 暂时注释掉
+    })
     server.listen(3000,()=>{
         console.log('sucess')
     })

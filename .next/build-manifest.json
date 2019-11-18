@@ -14,7 +14,7 @@
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
-    "/next/dist/pages/_error": [
+    "/a": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]
