@@ -1,0 +1,49 @@
+const axios=require('axios')
+const config=require('../config')
+const {client_id,client_secret,request_token_url}=config.github
+module.exports=(server)=>{
+  server.use(async (ctx,next)=>{
+    if(ctx.path==='auth'){
+      const code=ctx.query.code
+      if(!code){
+        ctx.body={
+          success:'false',
+          message:'Code not exist'
+        }
+        return
+      }
+      const result=await axios({
+        method:'POST',
+        url:request_token_url,
+        data:{
+          client_id,
+          client_secret,
+          code
+        },
+        headers:{
+          Accept:'application/json'
+        }
+      })
+      if(result.status===200&&(result.data&&!result.data.error)){
+        ctx.session.githubAuth=result.data
+        const {access_token,token_type}=result.data
+        const userInfoResp=await axios({
+          method:'GET',
+          url:'https://api.gityhub.com/user',
+          headers:{
+            'Authorization':`${access_token} ${token_type}`
+          }
+        })
+        ctx.session.userInfo=userInfoResp.data
+      }else{
+        const errorMessage=result.data&&result.data.error||''
+        ctx.body={
+          success:'false',
+          message:errorMessage
+        }
+      }
+    }else{
+      await next()
+    }
+  })
+}

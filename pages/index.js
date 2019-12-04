@@ -1,7 +1,7 @@
 import {Button} from "antd"
 import Link from 'next/link'
+import getConfig from 'next/config'
+const {publicRuntimeConfig}=getConfig()
 export default ()=>{
-    return <Link href="/a?id=1" as="/a/1" >
-        <Button>测试</Button>
-    </Link>
+    return <a href={publicRuntimeConfig.OAUTH_URL}>登录</a>
 }

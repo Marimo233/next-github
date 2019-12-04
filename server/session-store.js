@@ -38,9 +38,14 @@ class RedisSessionStore{
     }
   }
   //删除
-  async delete(sid){
+  async destroy(sid){
     const id=getRedisSessionId(sid)
-    await this.client.del(id)
+    try {
+      await this.client.del(id)
+    } catch (error) {
+      console.log(error)
+    }
+    
   }
 }
 

@@ -1304,20 +1304,18 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement;
 class Mydocument extends next_document__WEBPACK_IMPORTED_MODULE_2___default.a {
   static async getInitialProps(ctx) {
     const sheet = new styled_components__WEBPACK_IMPORTED_MODULE_3__["ServerStyleSheet"]();
-    const originalREnderPage = ctx.renderPage;
+    const originalRenderPage = ctx.renderPage;
 
     try {
-      ctx.renderPage = () => {
-        return originalREnderPage({
-          enhanceApp: App => props => sheet.collectStyles(__jsx(App, props))
-        });
-      };
+      ctx.renderPage = () => originalRenderPage({
+        enhanceApp: App => props => sheet.collectStyles(__jsx(App, props))
+      });
 
       let initProps = await next_document__WEBPACK_IMPORTED_MODULE_2___default.a.getInitialProps(ctx);
       return Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_0__["default"])({}, initProps, {
         styles: __jsx(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, initProps.styles, sheet.getStyleElement())
       });
-    } catch (error) {
+    } finally {
       sheet.seal();
     }
   }

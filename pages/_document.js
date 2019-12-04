@@ -1,16 +1,15 @@
 import Document ,{Html,Head,Main,NextScript} from 'next/document'
 import {ServerStyleSheet} from 'styled-components'
 export default class Mydocument extends Document{
-    static async getInitialProps (ctx){
-      
+    static async getInitialProps (ctx){     
       const sheet=new ServerStyleSheet()
-      const originalREnderPage=ctx.renderPage
+      const originalRenderPage=ctx.renderPage
       try {
-         ctx.renderPage=()=>{
-					return originalREnderPage({
+         ctx.renderPage=()=>
+					originalRenderPage({
 						enhanceApp:App=>props=>sheet.collectStyles(<App {...props} />)
 					})
-				 }
+				 
 				 let  initProps=await Document.getInitialProps(ctx)
 				 return {
 					...initProps,
@@ -18,9 +17,9 @@ export default class Mydocument extends Document{
 						<>{initProps.styles}{sheet.getStyleElement()}</>
 					)
       }
-      } catch (error) {
+      } finally {
 				sheet.seal()
-      }
+			}
       
     }
     render(){
