@@ -23,12 +23,15 @@ export default class Mydocument extends Document{
       
     }
     render(){
-        return <Html>
-            <Head></Head>
-            <bod>
-                <Main/>
-                <NextScript/>
-            </bod>
-        </Html>
+			return <Html>
+				<Head>
+					<title>Mithub</title>
+					<link rel="shortcut icon" href="/static/web-icon.jpg"></link>
+				</Head>
+				<bod>
+						<Main/>
+						<NextScript/>
+				</bod>
+			</Html>
     }
 }

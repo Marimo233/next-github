@@ -1,5 +1,6 @@
 import {useState,useCallback} from 'react'
 import { Layout,Icon,Input ,Avatar } from 'antd'
+import {Container} from '../Container'
 const { Header, Footer, Content } = Layout;
 const { Search } = Input;
 const LogoStyle={color:'white',fontSize:'40px',paddingTop:'10px',marginRight:'50px'}
@@ -13,6 +14,7 @@ export default ({children})=>{
   )
   return <Layout>
     <Header>
+      <Container renderer={<div/>}>
       <div className='logo'>
         <Icon type="github" style={LogoStyle} />  
       </div>
@@ -27,8 +29,13 @@ export default ({children})=>{
       <div className='avator'>
         <Avatar size="large" icon="user" />
       </div>
+      </Container>
     </Header>
-    <Content>{children}</Content>
+    <Content>
+      <Container renderer={<div style={{color:'red'}}/>}>
+        {children}
+      </Container>
+      </Content>
     <Footer style={{ textAlign: 'center' }}>Next-Github Created by Marimo</Footer>
     <style jsx>{`
       .logo{
@@ -49,6 +56,9 @@ export default ({children})=>{
       }
       .ant-layout{
         height:100%;
+      }
+      .ant-layout-header{
+        padding:0
       }
       `}
     </style>
