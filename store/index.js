@@ -1,8 +1,10 @@
 import {createStore} from 'redux'
 
-import reducer from './reducer'
-
-export default function initialStore(){
-  const store=createStore(reducer)
+import allReducer from './reducer'
+export default function initialStore(state){
+  const store=createStore(
+    allReducer,
+    state
+    )
   return store
 }

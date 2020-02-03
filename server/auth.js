@@ -3,7 +3,7 @@ const config=require('../config')
 const {client_id,client_secret,request_token_url}=config.github
 module.exports=(server)=>{
   server.use(async (ctx,next)=>{
-    if(ctx.path==='auth'){
+    if(ctx.path==='/auth'){
       const code=ctx.query.code
       if(!code){
         ctx.body={
@@ -29,12 +29,13 @@ module.exports=(server)=>{
         const {access_token,token_type}=result.data
         const userInfoResp=await axios({
           method:'GET',
-          url:'https://api.gityhub.com/user',
+          url:'https://api.github.com/user',
           headers:{
-            'Authorization':`${access_token} ${token_type}`
+            'Authorization':`${token_type} ${access_token}`
           }
         })
         ctx.session.userInfo=userInfoResp.data
+        ctx.redirect('/')
       }else{
         const errorMessage=result.data&&result.data.error||''
         ctx.body={

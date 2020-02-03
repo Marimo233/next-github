@@ -9,6 +9,6 @@ const scope='user'
 module.exports= withLess(withCss({
     publicRuntimeConfig:{
         GITHUB_OAUTH_URL,
-        OAUTH_URL:`${GITHUB_OAUTH_URL}?client_id=${config.github.client_id}$scpoe=${scope}`
+        OAUTH_URL:`${GITHUB_OAUTH_URL}?client_id=${config.github.client_id}&scpoe=${scope}`
     }
 }))

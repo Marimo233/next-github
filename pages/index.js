@@ -1,9 +1,11 @@
 import {Button} from "antd"
+import {useEffect} from 'react'
+import axios from 'axios'
 import Link from 'next/link'
+//next自带方法
 import getConfig from 'next/config'
 const {publicRuntimeConfig}=getConfig()
-import Layout from '../components/Layout'
 export default ()=>{
     // return <Layout>index</Layout>
-    return <span href={publicRuntimeConfig.OAUTH_URL}>登录</span>
+    return <a href={publicRuntimeConfig.OAUTH_URL}>登录</a>
 }

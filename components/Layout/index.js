@@ -1,17 +1,14 @@
 import {useState,useCallback} from 'react'
-import { Layout,Icon,Input ,Avatar } from 'antd'
+import { Layout,Icon,Input ,Avatar,Tooltip } from 'antd'
 import {Container} from '../Container'
+import getConfig from 'next/config'
+import {connect}from 'react-redux'
+const {publicRuntimeConfig}=getConfig()
 const { Header, Footer, Content } = Layout;
 const { Search } = Input;
 const LogoStyle={color:'white',fontSize:'40px',paddingTop:'10px',marginRight:'50px'}
-export default ({children})=>{
+function MyLayout({children,user}){
   const [search,setSearch]=useState('')
-  const handleSearch=useCallback(
-    () => {
-      
-    },
-    [],
-  )
   return <Layout>
     <Header>
       <Container renderer={<div/>}>
@@ -23,11 +20,15 @@ export default ({children})=>{
         placeholder="请输入仓库名" 
         style={{width:350}}
         onChange={(e)=>{setSearch(e.target.value)}}
-        onSearch={handleSearch}
+        // onSearch={handleSearch}
         />
       </div>
       <div className='avator'>
-        <Avatar size="large" icon="user" />
+        <Tooltip title='点击登录'>
+        <a href={publicRuntimeConfig.OAUTH_URL} >
+          <Avatar size="large" icon="user" />
+        </a>
+        </Tooltip>
       </div>
       </Container>
     </Header>
@@ -64,3 +65,9 @@ export default ({children})=>{
     </style>
   </Layout>
 }
+function mapState(state){
+  return {
+    ...state
+  }
+}
+export default connect(mapState)(MyLayout)

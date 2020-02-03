@@ -1,11 +1,10 @@
 import * as actions from '../action'
-
-const initalState={
+import {combineReducers} from 'redux'
+const initialState={
   count:0,
   name:'jack'
 }
-
-export default function reducer(state=initalState,action){
+function userInfoReducer(state=initialState,action){
   switch (action.type){
     case actions.ADD_COUNT:
       return {...state,count:action.data}
@@ -13,3 +12,7 @@ export default function reducer(state=initalState,action){
       return state
   }
 }
+const allReducer =combineReducers({
+  user:userInfoReducer
+})
+export default allReducer

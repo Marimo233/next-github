@@ -6,7 +6,7 @@ export default class Mydocument extends Document{
       const originalRenderPage=ctx.renderPage
       try {
          ctx.renderPage=()=>
-					originalRenderPage({
+         originalRenderPage({
 						enhanceApp:App=>props=>sheet.collectStyles(<App {...props} />)
 					})
 				 
@@ -25,7 +25,7 @@ export default class Mydocument extends Document{
     render(){
 			return <Html>
 				<Head>
-					<title>Mithub</title>
+					<title>Marihub</title>
 					<link rel="shortcut icon" href="/static/web-icon.jpg"></link>
 				</Head>
 				<bod>

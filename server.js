@@ -20,8 +20,9 @@ app.prepare().then(()=>{
       store:new RedisSessionStore(redis)
     }
     server.use(session(SESSION_CONFIG,server))
+    //配置处理githubOAuth登录
     auth(server)
-    router.get("/userInfo",async (ctx,next)=>{
+    router.get("/api/user/info",async (ctx,next)=>{
         const user=ctx.session.userInfo
         if(user){
           ctx.body={
@@ -40,10 +41,11 @@ app.prepare().then(()=>{
 		
     server.use(router.routes())
     server.use(async (ctx, next) => {
+      ctx.req.session=ctx.session
       await handle(ctx.req, ctx.res)
       ctx.respond = false 
     })
     server.listen(3000,()=>{
-        console.log('sucess')
+        console.log('success')
     })
 })
