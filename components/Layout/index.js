@@ -1,5 +1,5 @@
 import {useState,useCallback} from 'react'
-import { Layout,Icon,Input ,Avatar,Tooltip } from 'antd'
+import { Layout,Icon,Input ,Avatar,Tooltip ,Dropdown,Menu} from 'antd'
 import {Container} from '../Container'
 import getConfig from 'next/config'
 import {connect}from 'react-redux'
@@ -7,6 +7,13 @@ const {publicRuntimeConfig}=getConfig()
 const { Header, Footer, Content } = Layout;
 const { Search } = Input;
 const LogoStyle={color:'white',fontSize:'40px',paddingTop:'10px',marginRight:'50px'}
+const handleUserItem=(
+  <Menu>
+    <Menu.Item>
+      退出
+    </Menu.Item>
+  </Menu>
+)
 function MyLayout({children,user}){
   const [search,setSearch]=useState('')
   return <Layout>
@@ -24,11 +31,20 @@ function MyLayout({children,user}){
         />
       </div>
       <div className='avator'>
-        <Tooltip title='点击登录'>
-        <a href={publicRuntimeConfig.OAUTH_URL} >
-          <Avatar size="large" icon="user" />
-        </a>
-        </Tooltip>
+        {
+          user
+          ?<Dropdown overlay={handleUserItem}>
+            <a href='javascript:void(0)' >
+            <Avatar size="large" src={user.avatar_url} />
+          </a>
+          </Dropdown>
+          :<Tooltip title='点击登录'>
+          <a href={publicRuntimeConfig.OAUTH_URL} >
+            <Avatar size="large" icon="user" />
+          </a>
+          </Tooltip>
+        }
+        
       </div>
       </Container>
     </Header>
