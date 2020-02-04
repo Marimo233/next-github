@@ -5,7 +5,6 @@ export const LOGOUT='LOGOUT'
 export const handleLogout=()=>{
   return (dispatch)=>{
     axios.post('/api/user/logout').then(resp=>{
-      console.log(resp)
       const {success}=resp.data
       if(resp.status===200&&success){
         dispatch({

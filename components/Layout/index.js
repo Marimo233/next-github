@@ -3,13 +3,15 @@ import { Layout,Icon,Input ,Avatar,Tooltip ,Dropdown,Menu,Modal} from 'antd'
 import {Container} from '../Container'
 import getConfig from 'next/config'
 import {connect}from 'react-redux'
+import {withRouter} from 'next/router'
 import {handleLogout} from '../../store/action'
 const {publicRuntimeConfig}=getConfig()
 const { Header, Footer, Content } = Layout;
 const { Search } = Input;
 const { confirm } = Modal;
 const LogoStyle={color:'white',fontSize:'40px',paddingTop:'10px',marginRight:'50px'}
-function MyLayout({children,user,logout}){
+
+function MyLayout({children,user,logout,router}){
   const [search,setSearch]=useState('')
   const confirmLogout=useCallback(()=>{
     confirm({
@@ -49,7 +51,7 @@ function MyLayout({children,user,logout}){
           </a>
           </Dropdown>
           :<Tooltip title='点击登录'>
-          <a href={publicRuntimeConfig.OAUTH_URL} >
+          <a href={`/prepare-auth?url=${router.asPath}`} >
             <Avatar size="large" icon="user" />
           </a>
           </Tooltip>
@@ -99,9 +101,8 @@ function mapState(state){
 function mapDispatch(dispatch){
   return {
     logout:()=>{
-      console.log('a')
       dispatch(handleLogout())
     }
   }
 }
-export default connect(mapState,mapDispatch)(MyLayout)
+export default connect(mapState,mapDispatch)(withRouter(MyLayout))

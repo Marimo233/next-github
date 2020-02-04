@@ -2,6 +2,7 @@ const axios=require('axios')
 const config=require('../config')
 const {client_id,client_secret,request_token_url}=config.github
 module.exports=(server)=>{
+  //处理OAuth认证后返回登陆信息
   server.use(async (ctx,next)=>{
     if(ctx.path==='/auth'){
       const code=ctx.query.code
@@ -35,13 +36,29 @@ module.exports=(server)=>{
           }
         })
         ctx.session.userInfo=userInfoResp.data
-        ctx.redirect('/')
+        console.log(ctx.session.urlBeforeLogin)
+        ctx.redirect((ctx.session&&ctx.session.urlBeforeLogin)||'/')
+        ctx.session.urlBeforeLogin=''
       }else{
         const errorMessage=result.data&&result.data.error||''
         ctx.body={
           success:'false',
           message:errorMessage
         }
+      }
+    }else{
+      await next()
+    }
+  })
+  //处理客户端请求登录
+  server.use(async (ctx,next)=>{
+    if(ctx.path==='/prepare-auth'&&ctx.method==='GET'){
+      const {url}=ctx.query
+      if(url){
+        ctx.session.urlBeforeLogin=url
+        ctx.redirect(config.OAUTH_URL)
+      }else{
+        await next()
       }
     }else{
       await next()
