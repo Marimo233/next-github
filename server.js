@@ -22,6 +22,7 @@ app.prepare().then(()=>{
     server.use(session(SESSION_CONFIG,server))
     //配置处理githubOAuth登录
     auth(server)
+    //获取信息
     router.get("/api/user/info",async (ctx,next)=>{
         const user=ctx.session.userInfo
         if(user){
@@ -37,7 +38,15 @@ app.prepare().then(()=>{
             message:'need login'
           }
         }
-		})
+    })
+    //登出
+    router.post('/api/user/logout',async(ctx,next)=>{
+      ctx.session=null
+      ctx.body={
+        success:true,
+        message:'logout success'
+      }
+    })
 		
     server.use(router.routes())
     server.use(async (ctx, next) => {

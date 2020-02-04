@@ -1818,9 +1818,7 @@ const {
 } = next_config__WEBPACK_IMPORTED_MODULE_3___default()();
 /* harmony default export */ __webpack_exports__["default"] = (() => {
   // return <Layout>index</Layout>
-  return __jsx("a", {
-    href: publicRuntimeConfig.OAUTH_URL
-  }, "\u767B\u5F55");
+  return __jsx("span", null, "\u767B\u5F55");
 });
 
 /***/ }),

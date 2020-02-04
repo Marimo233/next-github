@@ -1,21 +1,31 @@
 import {useState,useCallback} from 'react'
-import { Layout,Icon,Input ,Avatar,Tooltip ,Dropdown,Menu} from 'antd'
+import { Layout,Icon,Input ,Avatar,Tooltip ,Dropdown,Menu,Modal} from 'antd'
 import {Container} from '../Container'
 import getConfig from 'next/config'
 import {connect}from 'react-redux'
+import {handleLogout} from '../../store/action'
 const {publicRuntimeConfig}=getConfig()
 const { Header, Footer, Content } = Layout;
 const { Search } = Input;
+const { confirm } = Modal;
 const LogoStyle={color:'white',fontSize:'40px',paddingTop:'10px',marginRight:'50px'}
-const handleUserItem=(
-  <Menu>
-    <Menu.Item>
-      退出
-    </Menu.Item>
-  </Menu>
-)
-function MyLayout({children,user}){
+function MyLayout({children,user,logout}){
   const [search,setSearch]=useState('')
+  const confirmLogout=useCallback(()=>{
+    confirm({
+      content:'请确认要退出吗？',
+      cancelText:'取消',
+      okText:'确认',
+      onOk:logout
+    })
+  },[])
+  const handleUserItem=(
+    <Menu>
+      <Menu.Item onClick={confirmLogout}>
+        退出
+      </Menu.Item>
+    </Menu>
+  )
   return <Layout>
     <Header>
       <Container renderer={<div/>}>
@@ -32,7 +42,7 @@ function MyLayout({children,user}){
       </div>
       <div className='avator'>
         {
-          user
+          user&&user.id
           ?<Dropdown overlay={handleUserItem}>
             <a href='javascript:void(0)' >
             <Avatar size="large" src={user.avatar_url} />
@@ -86,4 +96,12 @@ function mapState(state){
     ...state
   }
 }
-export default connect(mapState)(MyLayout)
+function mapDispatch(dispatch){
+  return {
+    logout:()=>{
+      console.log('a')
+      dispatch(handleLogout())
+    }
+  }
+}
+export default connect(mapState,mapDispatch)(MyLayout)

@@ -7,5 +7,5 @@ import getConfig from 'next/config'
 const {publicRuntimeConfig}=getConfig()
 export default ()=>{
     // return <Layout>index</Layout>
-    return <a href={publicRuntimeConfig.OAUTH_URL}>登录</a>
+    return <span>登录</span>
 }
