@@ -6,6 +6,7 @@ import MyLayout from '../components/Layout'
 import PageLoading from '../components/PageLoading'
 import {Provider} from 'react-redux'
 import withRedux from '../lib/withRedux'
+import axios from 'axios'
 class MyApp extends App{
 	constructor(){
     super()
@@ -28,6 +29,9 @@ class MyApp extends App{
     Router.events.on('routeChangeStart',this.showLoading)
     Router.events.on('routeChangeComplete',this.hideLoading)
     Router.events.on('routeChangeError',this.hideLoading)
+    axios.get('/github/search/repositories?q=react').then(resp=>{
+      console.log(resp)
+    })
   }
   componentWillUnmount(){
     Router.events.off('routeChangeStart',this.showLoading)

@@ -5,7 +5,6 @@ import getConfig from 'next/config'
 import {connect}from 'react-redux'
 import {withRouter} from 'next/router'
 import {handleLogout} from '../../store/action'
-const {publicRuntimeConfig}=getConfig()
 const { Header, Footer, Content } = Layout;
 const { Search } = Input;
 const { confirm } = Modal;
@@ -51,6 +50,7 @@ function MyLayout({children,user,logout,router}){
           </a>
           </Dropdown>
           :<Tooltip title='点击登录'>
+          {/* withRouter获得的asPath */}
           <a href={`/prepare-auth?url=${router.asPath}`} >
             <Avatar size="large" icon="user" />
           </a>

@@ -8,6 +8,7 @@ const handle=app.getRequestHandler()
 const session=require('koa-session')
 const RedisSessionStore=require('./server/session-store')
 const auth=require('./server/auth')
+const api=require('./server/api')
 app.prepare().then(()=>{
     const server=new Koa()
     const router=new Router()
@@ -22,6 +23,8 @@ app.prepare().then(()=>{
     server.use(session(SESSION_CONFIG,server))
     //配置处理githubOAuth登录
     auth(server)
+    //github接口代理
+    api(server)
     //获取信息
     router.get("/api/user/info",async (ctx,next)=>{
         const user=ctx.session.userInfo
