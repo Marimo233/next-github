@@ -5,13 +5,23 @@ import getConfig from 'next/config'
 import {connect}from 'react-redux'
 import {withRouter} from 'next/router'
 import {handleLogout} from '../../store/action'
+import Link from 'next/link'
 const { Header, Footer, Content } = Layout;
 const { Search } = Input;
 const { confirm } = Modal;
 const LogoStyle={color:'white',fontSize:'40px',paddingTop:'10px',marginRight:'50px'}
 
 function MyLayout({children,user,logout,router}){
-  const [search,setSearch]=useState('')
+
+  const urlQuery=router.query&&router.query.query
+
+  const [search,setSearch]=useState(urlQuery||'')
+  
+  //处理搜索
+  const handleSearch=useCallback(()=>{
+    router.push(`/search?query=${search}`)
+  })
+
   const confirmLogout=useCallback(()=>{
     confirm({
       content:'请确认要退出吗？',
@@ -19,7 +29,7 @@ function MyLayout({children,user,logout,router}){
       okText:'确认',
       onOk:logout
     })
-  },[])
+  },[search])
   const handleUserItem=(
     <Menu>
       <Menu.Item onClick={confirmLogout}>
@@ -31,14 +41,17 @@ function MyLayout({children,user,logout,router}){
     <Header>
       <Container renderer={<div/>}>
       <div className='logo'>
-        <Icon type="github" style={LogoStyle} />  
+        <Link href='/'>
+        <Icon type="github" style={LogoStyle} />
+        </Link>
       </div>
       <div className='header-searach'>
         <Search 
         placeholder="请输入仓库名" 
         style={{width:350}}
+        value={search}
         onChange={(e)=>{setSearch(e.target.value)}}
-        // onSearch={handleSearch}
+        onSearch={handleSearch}
         />
       </div>
       <div className='avator'>
@@ -84,10 +97,13 @@ function MyLayout({children,user,logout,router}){
         height:100%;
       }
       .ant-layout{
-        height:100%;
+        min-height:100%;
       }
       .ant-layout-header{
         padding:0
+      }
+      .ant-layout-content{
+        background-color:#fff
       }
       `}
     </style>

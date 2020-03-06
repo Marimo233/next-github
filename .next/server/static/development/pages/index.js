@@ -88,10 +88,61 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
+
+/***/ "./lib/api.js":
+/*!********************!*\
+  !*** ./lib/api.js ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const axios = __webpack_require__(/*! axios */ "axios");
+
+const isServer = true;
+const github_base_url = 'https://api.github.com';
+
+async function request({
+  method = 'GET',
+  url,
+  data
+}, req, res) {
+  if (!url) {
+    throw Error('url must be provied');
+  }
+
+  if (isServer) {
+    const githubAuth = req.session.githubAuth;
+    const token = githubAuth && githubAuth.access_token;
+    let headers = {};
+
+    if (token) {
+      headers['Authorization'] = `${githubAuth.token_type} ${token}`;
+    }
+
+    return axios({
+      method,
+      url: `${github_base_url}${url}`,
+      headers,
+      data
+    });
+  } else {
+    return axios({
+      method,
+      url: `/github${url}`,
+      data
+    });
+  }
+}
+
+module.exports = {
+  request
+};
+
+/***/ }),
 
 /***/ "./node_modules/@babel/runtime-corejs2/core-js/map.js":
 /*!************************************************************!*\
@@ -1806,6 +1857,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var next_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! next/config */ "next/config");
 /* harmony import */ var next_config__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(next_config__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _lib_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/api */ "./lib/api.js");
+/* harmony import */ var _lib_api__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_lib_api__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var antd_lib_config_provider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! antd/lib/config-provider */ "antd/lib/config-provider");
+/* harmony import */ var antd_lib_config_provider__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(antd_lib_config_provider__WEBPACK_IMPORTED_MODULE_5__);
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
@@ -1813,17 +1868,30 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
  //next自带方法
 
 
-const {
-  publicRuntimeConfig
-} = next_config__WEBPACK_IMPORTED_MODULE_3___default()();
-/* harmony default export */ __webpack_exports__["default"] = (() => {
+
+
+
+function Index({
+  result
+}) {
   // return <Layout>index</Layout>
-  return __jsx("span", null, "\u767B\u5F55");
-});
+  return __jsx("span", null, "index");
+}
+
+Index.getInitialProps = async ({
+  ctx
+}) => {
+  const result = await _lib_api__WEBPACK_IMPORTED_MODULE_4___default.a.request({
+    url: '/search/repositories?q=react'
+  }, ctx.req, ctx.res);
+  console.log(result);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Index);
 
 /***/ }),
 
-/***/ 4:
+/***/ 3:
 /*!******************************!*\
   !*** multi ./pages/index.js ***!
   \******************************/
@@ -1832,6 +1900,17 @@ const {
 
 module.exports = __webpack_require__(/*! C:\Users\marimo\Desktop\next-github\pages\index.js */"./pages/index.js");
 
+
+/***/ }),
+
+/***/ "antd/lib/config-provider":
+/*!*******************************************!*\
+  !*** external "antd/lib/config-provider" ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("antd/lib/config-provider");
 
 /***/ }),
 

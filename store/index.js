@@ -4,7 +4,6 @@ import thunk from 'redux-thunk';
 import allReducer from './reducer'
 
 export default function initialStore(state){
-  console.log(state)
   let store=createStore(
     allReducer,
     state,

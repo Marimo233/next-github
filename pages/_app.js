@@ -15,7 +15,6 @@ class MyApp extends App{
     }
   }
   showLoading=()=>{
-    console.log('a')
     this.setState({
       loading:true
     })
@@ -29,9 +28,6 @@ class MyApp extends App{
     Router.events.on('routeChangeStart',this.showLoading)
     Router.events.on('routeChangeComplete',this.hideLoading)
     Router.events.on('routeChangeError',this.hideLoading)
-    axios.get('/github/search/repositories?q=react').then(resp=>{
-      console.log(resp)
-    })
   }
   componentWillUnmount(){
     Router.events.off('routeChangeStart',this.showLoading)

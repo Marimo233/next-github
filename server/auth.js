@@ -36,7 +36,6 @@ module.exports=(server)=>{
           }
         })
         ctx.session.userInfo=userInfoResp.data
-        console.log(ctx.session.urlBeforeLogin)
         ctx.redirect((ctx.session&&ctx.session.urlBeforeLogin)||'/')
         ctx.session.urlBeforeLogin=''
       }else{

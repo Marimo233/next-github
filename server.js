@@ -2,6 +2,7 @@ const Koa=require('koa')
 const Router=require('koa-router')
 const Next=require('next')
 const Redis=require('ioredis')
+const koaBody=require('koa-body')
 const dev=process.env.Node_ENV!=='production'
 const app=new Next({dev})
 const handle=app.getRequestHandler()
@@ -20,6 +21,7 @@ app.prepare().then(()=>{
       key:'marimo',
       store:new RedisSessionStore(redis)
     }
+    server.use(koaBody())
     server.use(session(SESSION_CONFIG,server))
     //配置处理githubOAuth登录
     auth(server)
