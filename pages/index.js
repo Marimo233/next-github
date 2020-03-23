@@ -6,14 +6,35 @@ import Link from 'next/link'
 import getConfig from 'next/config'
 import api from '../lib/api'
 import { configConsumerProps } from "antd/lib/config-provider"
-function Index({result}){
+function Index({userRepos}){
+  console.log(userRepos)
     // return <Layout>index</Layout>
     return <span>index</span>
 }
 
-Index.getInitialProps=async ({ctx})=>{
-    const result=await api.request({url:'/search/repositories?q=react'},ctx.req,ctx.res)
-    console.log(result)
+Index.getInitialProps=async ({ctx,reduxStore})=>{
+  const user =reduxStore.getState().user
+  if(!user||!user.id){
+    return {
+      isLogin:false
+    }
+  }else{
+    let userRepos=[],userStarredRepos=[]
+    try {
+      const userReposResp=await api.request({url:'/user/repos'},ctx.req,ctx.res)
+      userRepos=userReposResp.data||[]
+      const userStarredReposResp=await api.request({url:'/user/starred'},ctx.req,ctx.res)
+      userStarredRepos=userStarredReposResp.data||[]
+    } catch (error) {
+      console.log(error)
+    }
+    return {
+      isLogin:true,
+      userRepos,
+      userStarredRepos,
+    }
+  }
+    
 }
 
 export default Index
