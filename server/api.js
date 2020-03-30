@@ -1,18 +1,18 @@
 const api =require('../lib/api')
 module.exports=(server)=>{
   server.use(async (ctx,next)=>{
-    const url=ctx.url
-    if(url.startsWith('/github/')){
-      const method=ctx.method
+    const { path, method} = ctx
+    if(path.startsWith('/github/')){
         try {
-          const result=await api.request({
+          const result= await api.request({
             method,
-            url:url.replace('/github/','/'),
-            data:{}
-          },ctx.req,ctx.res)
+            url:ctx.url.replace('/github/','/'),
+            data:ctx.request.body
+            //对于在客户端发起的请求，ctx.req不存在，因此要传入ctx
+          },ctx,ctx)
           if(result.status===200){
             ctx.body={
-              suuccess:true,
+              success:true,
               data:result.data,
               code:200
             }
@@ -20,13 +20,16 @@ module.exports=(server)=>{
           }else{
             ctx.code=result.status
             ctx.body={
-              suuccess:false
+              success:false,
+              data:[]
             }
           }
         } catch (error) {
+          console.log(error)
           ctx.body={
-            suuccess:false,
-            message:error
+            success:false,
+            message:error,
+            data:[]
           }
         }
     }else{

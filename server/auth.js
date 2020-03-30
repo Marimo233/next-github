@@ -13,29 +13,39 @@ module.exports=(server)=>{
         }
         return
       }
-      const result=await axios({
-        method:'POST',
-        url:request_token_url,
-        data:{
-          client_id,
-          client_secret,
-          code
-        },
-        headers:{
-          Accept:'application/json'
-        }
-      })
+      let result=null
+      try {
+       result=await axios({
+          method:'POST',
+          url:request_token_url,
+          data:{
+            client_id,
+            client_secret,
+            code
+          },
+          headers:{
+            Accept:'application/json'
+          }
+        })
+      } catch (error) {
+        console.log(error)
+      }
       if(result.status===200&&(result.data&&!result.data.error)){
         ctx.session.githubAuth=result.data
         const {access_token,token_type}=result.data
-        const userInfoResp=await axios({
-          method:'GET',
-          url:'https://api.github.com/user',
-          headers:{
-            'Authorization':`${token_type} ${access_token}`
-          }
-        })
-        ctx.session.userInfo=userInfoResp.data
+        let userInfoResp=null
+        try {
+          userInfoResp=await axios({
+            method:'GET',
+            url:'https://api.github.com/user',
+            headers:{
+              'Authorization':`${token_type} ${access_token}`
+            }
+          })
+        } catch (error) {
+          console.log(error)
+        }
+        ctx.session.userInfo=userInfoResp&&userInfoResp.data||''
         ctx.redirect((ctx.session&&ctx.session.urlBeforeLogin)||'/')
         ctx.session.urlBeforeLogin=''
       }else{

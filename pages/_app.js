@@ -51,8 +51,6 @@ class MyApp extends App{
           {
             this.state.loading&&<PageLoading/>
           }
-          <Link href='/'>index</Link>
-          <Link href='/detail'>detail</Link>
           <Component {...pageProps}></Component>
         </MyLayout>
         </Provider>

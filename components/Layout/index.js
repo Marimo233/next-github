@@ -74,7 +74,7 @@ function MyLayout({children,user,logout,router}){
       </Container>
     </Header>
     <Content>
-      <Container renderer={<div style={{color:'red'}}/>}>
+      <Container renderer={<div/>}>
         {children}
       </Container>
       </Content>
@@ -103,6 +103,7 @@ function MyLayout({children,user,logout,router}){
         padding:0
       }
       .ant-layout-content{
+        position:relative;
         background-color:#fff
       }
       `}
