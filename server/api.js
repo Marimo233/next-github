@@ -8,7 +8,7 @@ module.exports=(server)=>{
             method,
             url:ctx.url.replace('/github/','/'),
             data:ctx.request.body
-            //对于在客户端发起的请求，ctx.req不存在，因此要传入ctx
+            //对于在客户端发起的请求，ctx.req.session还不存在，因此要传入ctx
           },ctx,ctx)
           if(result.status===200){
             ctx.body={
@@ -25,7 +25,7 @@ module.exports=(server)=>{
             }
           }
         } catch (error) {
-          console.log(error)
+          console.log('server error',error)
           ctx.body={
             success:false,
             message:error,
