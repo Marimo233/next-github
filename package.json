@@ -23,7 +23,7 @@
     "koa-router": "^7.4.0",
     "koa-session": "^5.12.3",
     "lru-cache": "^5.1.1",
-    "next": "^9.0.6",
+    "next": "^9.3.2",
     "next-compose-plugins": "^2.2.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
