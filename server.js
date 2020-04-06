@@ -8,8 +8,13 @@ const app=new Next({dev})
 const handle=app.getRequestHandler()
 const session=require('koa-session')
 const RedisSessionStore=require('./server/session-store')
+const atob =require('atob')
 const auth=require('./server/auth')
 const api=require('./server/api')
+
+// 设置nodejs全局变量
+global.atob = atob
+
 app.prepare().then(()=>{
     const server=new Koa()
     const router=new Router()

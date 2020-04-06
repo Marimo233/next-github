@@ -3,6 +3,8 @@ import {Button,Icon,Tabs} from "antd"
 import {connect} from 'react-redux'
 import Router,{withRouter} from 'next/router'
 import LRU from 'lru-cache'
+
+import {cacheArray} from '../lib/repo-cache'
 import api from '../lib/api'
 import Repo from '../components/Repo'
 
@@ -34,7 +36,12 @@ useEffect(()=>{
 
   }
 },[userRepos,userStaredRepos])
-
+useEffect(() => {
+  if(!isServer){
+    cacheArray(userRepos)
+    cacheArray(userStaredRepos)
+  }
+},[userRepos,userStaredRepos])
   const tabKey = router.query.key || '1'
   const handleTabChange = activeKey => {
     Router.push(`/?key=${activeKey}`)

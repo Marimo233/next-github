@@ -20,7 +20,7 @@ function MyLayout({children,user,logout,router}){
   //处理搜索
   const handleSearch=useCallback(()=>{
     router.push(`/search?query=${search}`)
-  })
+  },[search])
 
   const confirmLogout=useCallback(()=>{
     confirm({
@@ -29,7 +29,7 @@ function MyLayout({children,user,logout,router}){
       okText:'确认',
       onOk:logout
     })
-  },[search])
+  },[logout])
   const handleUserItem=(
     <Menu>
       <Menu.Item onClick={confirmLogout}>
