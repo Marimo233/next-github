@@ -7,7 +7,6 @@ function getLicense(license) {
 }
 
 export default ({ repo }) => {
-  console.log(repo)
   return (
     <div className="root">
       <div className="basic-info">
