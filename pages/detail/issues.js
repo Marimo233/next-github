@@ -5,6 +5,7 @@ import { Avatar, Button, Select, Spin } from 'antd'
 import withDetail from '../../components/withDetail'
 import api from '../../lib/api'
 import {getLastUpdated} from '../../lib/utils'
+import SearchUser from '../../components/SearchUser'
 
 const Markdown=dynamic(()=>import ('../../components/Markdown'))
 const isServer=typeof window==='undefined'
@@ -98,10 +99,20 @@ function IssueItem({issue}){
   )
 }
 
+
+
 const Detail=({issues})=>{
+const [creator,setCreatoe]=useState('')
+
+  // 选中搜索结果的回调
+  const handleCreatorChange = useCallback(value => {
+    setCreator(value)
+  }, [])
+  
     return (
       <div className='root'>
         <div className='issues'>
+          <SearchUser onChang={handleCreatorChang} value={creator}/>
           {issues.map((item)=>{
             return <IssueItem issue={item} />
           })}
