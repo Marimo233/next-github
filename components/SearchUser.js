@@ -1,13 +1,13 @@
 import {useEffect,useCallback,useState,useRef} from 'react'
-import {Select} from 'antd'
+import {Select,Spin} from 'antd'
 import {debounce} from 'lodash'
 import api from '../lib/api'
 
 const Option=Select.Option
 
-function SearchUser({onChang,value}){
+function SearchUser({onChange,value}){
   const [fetching,setFetching]=useState(false)
-  const [data,setData]=useState([])
+  const [options, setOptions] = useState([])
 
   // lastFetchIdRef作用是避免搜索结果请求过程中,又发起新的请求
   // 这样导致用户可能会看到现象，即一个数组刚显示就被立马替换的过程
@@ -18,7 +18,7 @@ function SearchUser({onChang,value}){
       lastFetchIdRef.current += 1
       const fetchId = lastFetchIdRef.current
       setFetching(true)
-      setData([])
+      setOptions([])
       if(!value) {
         setFetching(false)
         setOptions([])
@@ -33,12 +33,13 @@ function SearchUser({onChang,value}){
           return
         }
         const data=resp.data.data
-        data.map((item)=>{
+        data.items=data.items.map((item)=>{
           return {
             text:item.login,
             value:item.login
           }
         })
+        setOptions(data.items)
       }).finally(()=>{
         setFetching(false)
       })
@@ -53,12 +54,16 @@ function SearchUser({onChang,value}){
   return <Select
     value={value}
     filterOption={false}
+    showSearch={true}
+    filterOption={false}
+    placeholder="创建者"
     notFoundContent={fetching ? <Spin size="small" /> : <span>no user</span>}
     style={{ width: '100%' }}
     onSearch={handleSearch}
+    onChange={handleChange}
   >
     {
-      data.map((item)=>{
+      options.map((item)=>{
         return <Option value={item.value} key={item.key}>{item.text}</Option>
       })
     }

@@ -7,6 +7,7 @@ import api from '../../lib/api'
 import {getLastUpdated} from '../../lib/utils'
 import SearchUser from '../../components/SearchUser'
 
+const Option=Select.Option
 const Markdown=dynamic(()=>import ('../../components/Markdown'))
 const isServer=typeof window==='undefined'
 
@@ -32,7 +33,7 @@ function IssueDetail({issue}){
   )
 }
 
-function IssueItem({issue}){
+function IssueItem({issue,labels}){
   const [showDetail, setShowDetail] = useState(false)
   // 这个写法就可以不依赖showDetail。这么写可以避开闭包
   const toggleShowDetail = useCallback(() => {
@@ -99,43 +100,114 @@ function IssueItem({issue}){
   )
 }
 
+const Issues=({issues,labels})=>{
 
+const [creator,setCreator]=useState('')
+const [state,setState]=useState('all')
+const [label,setLabel]=useState([])
 
-const Detail=({issues})=>{
-const [creator,setCreatoe]=useState('')
-
-  // 选中搜索结果的回调
+  // 选中用户结果的回调
   const handleCreatorChange = useCallback(value => {
     setCreator(value)
+  }, [])
+
+  // 选中状态结果的回调
+  const handleStateChange = useCallback(value => {
+    setState(value)
+  }, [])
+
+  // 选中label结果的回调
+  const handleLabelChange = useCallback(value => {
+    setLabel(value)
   }, [])
   
     return (
       <div className='root'>
+        <div className='search'>
+          <SearchUser onChange={handleCreatorChange} value={creator}/>
+          <Select
+            placeholder="状态"
+            onChange={handleStateChange}
+            value={state}
+            style={{ width: 200, marginLeft: 20 }}
+          >
+            <Option value='all'>all</Option>
+            <Option value='open'>open</Option>
+            <Option value='closed'>closed</Option>
+          </Select>
+          <Select
+          mode="multiple"
+          placeholder="Label"
+          onChange={handleLabelChange}
+          value={label}
+          style={{ flexGrow: 1, marginLeft: 20, marginRight: 20 }}
+          >
+            {labels
+            ?labels.map(la => (
+              <Option value={la.name} key={la.id}>
+                {la.name}
+              </Option>
+            ))
+            :''
+        }
+        </Select>
+        {/* <Button type="primary" onClick={handleSearch} disabled={fetching}>
+          搜索
+        </Button> */}
+        </div>
         <div className='issues'>
-          <SearchUser onChang={handleCreatorChang} value={creator}/>
           {issues.map((item)=>{
             return <IssueItem issue={item} />
           })}
         </div>
+        <style jsx>{`
+        .issues {
+          border: 1px solid #eee;
+          border-radius: 5px;
+          margin-bottom: 20px;
+          margin-top: 20px;
+        }
+        .search {
+          display: flex;
+        }
+        .loading {
+          height: 400px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      `}</style>
       </div>
     )
 }
 
-Detail.getInitialProps=async ({ctx})=>{
+Issues.getInitialProps=async ({ctx})=>{
   const {owner,name}=ctx.query
-  let issues=[]
-  try {
-    const issuesResp=await api.request({
-      url: `/repos/${owner}/${name}/issues`
-    },ctx.req,ctx.res)
-    return {
-      issues:isServer?issuesResp.data:issuesResp.data.dat
-    }
-  } catch (error) {
-    console.log(error)
-    return {
-      issues
-    }
+  const full_name = `${owner}/${name}`
+
+  const fetchs=Promise.all([
+    await api.request(
+      {
+        url: `/repos/${owner}/${name}/issues`
+      },
+      ctx.req,
+      ctx.res
+    ),
+    await api.request(
+      {
+        url: `/repos/${owner}/${name}/labels`
+      },
+      ctx.req,
+      ctx.res
+    )
+  ])
+
+  const [IssuesResp,LabelsResp]=fetchs
+  return {
+    owner,
+    name,
+    initialIssues: IssuesResp.data,
+    labels: LabelsResp.data
   }
 }
-export default  withDetail(Detail,'issues')
+export default  withDetail(Issues,'issues')

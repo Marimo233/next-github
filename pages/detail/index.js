@@ -6,9 +6,9 @@ const Detail=({readme})=>{
     return <Markdown content={readme.content} isbase64={true}/>
 }
 
-Detail.getInitialProps= async ({ ctx: { query: {owner, name}}})=>{
+Detail.getInitialProps= async ({ ctx: { query: {owner, name},req,res}})=>{
   try {
-  const readmeResp = await request(
+  const readmeResp = await api.request(
     {
         url: `/repos/${owner}/${name}/readme`
     },
