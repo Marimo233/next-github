@@ -58,7 +58,7 @@ function SearchUser({onChange,value}){
     filterOption={false}
     placeholder="创建者"
     notFoundContent={fetching ? <Spin size="small" /> : <span>no user</span>}
-    style={{ width: '100%' }}
+    style={{ width: 200 }}
     onSearch={handleSearch}
     onChange={handleChange}
   >

@@ -167,17 +167,8 @@ Index.getInitialProps=async ({ctx,reduxStore,req})=>{
     try {
       userReposResp=await api.request({url:'/user/repos'},ctx.req,ctx.res)
       userStarredReposResp= await api.request({url:'/user/starred'},ctx.req,ctx.res)
-      if(isServer){
-        userRepos=userReposResp.data||[]
-        userStaredRepos=userStarredReposResp.data||[]
-      }else{
-        if(userReposResp.data&&userReposResp.data.success){
-          userRepos=userReposResp.data.data||[]
-        }
-        if(userStaredRepos.data&&userStaredRepos.data.success){
-          userStaredRepos=userStarredReposResp.data.data||[]
-        }
-      }
+      userRepos=userReposResp.data||[]
+      userStaredRepos=userStarredReposResp.data||[]
     } catch (error) {
       console.log('window error',error)
     }

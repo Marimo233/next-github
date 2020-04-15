@@ -11,11 +11,8 @@ module.exports=(server)=>{
             //对于在客户端发起的请求，ctx.req.session还不存在，因此要传入ctx
           },ctx,ctx)
           if(result.status===200){
-            ctx.body={
-              success:true,
-              data:result.data,
-              code:200
-            }
+            ctx.status = result.status 
+            ctx.body = result.data
             ctx.set('Content-Type','application/json')
           }else{
             ctx.code=result.status

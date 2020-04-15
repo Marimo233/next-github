@@ -176,15 +176,10 @@ Search.getInitialProps = async ({ ctx }) => {
     ctx.req,
     ctx.res
   )
-    if(isServer){
-      return {
-        repos: result.data||{}
-      }
-    }else{
-      return {
-        repos: result.data.data||{}
-      }
-    }
+  return {
+    repos: result.data||{}
+  }
+    
 }
 
 export default withRouter(Search)
